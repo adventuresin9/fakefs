@@ -133,18 +133,22 @@ fsinit(void)
 void
 threadmain(int argc, char *argv[])
 {
-	char *srvname, *mntpt;
+	char *srvname = "fakefs";
+	char *mntpt = "/n";
+	char *f;
 
+	ARGBEGIN {
+		case 'n':
+			srvname = (f=ARGF()) ? f : "fakefs";
+			break;
+		case 'm':
+			mntpt = (f=ARGF()) ? f : "fakefs";
+			break;
+		default:
+			print("badflag");
+	} ARGEND
 
-/* I was lazy and didn't bother setting args for */
-/* user selectable mount points                  */
-/* Edit mntpt if you want the fake directory to  */
-/* appear somewhere other than /n                */
-
-
-	srvname = "fakefs";
-	mntpt = "/n";
-
+	//print("srvname: %s\nmntpt: %s\n", srvname, mntpt);
 	fsinit();
 	threadpostmountsrv(&s, srvname, mntpt, MBEFORE);
 	threadexits(nil);
